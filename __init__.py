@@ -1,4 +1,4 @@
-__all__ = ["graph_builder"]
+__all__ = ["graph_builder", "network_generator"]
 
 __version__="0.1"
 def __dir__():
