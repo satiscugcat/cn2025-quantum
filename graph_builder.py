@@ -1,0 +1,132 @@
+import json
+
+def regular_gen(n: int, file_name: str) -> dict:
+    '''
+    Returns a network topology following a regular graph structure in the form of a dict.
+    
+    A "regular" graph is a graph with n sources, n destinations,
+    and n**2 repeaters. Connected in such a fasion that there are n layers
+    of n repeaters placed between the source and the destination.
+
+    For eg. n = 2, a regular graph looks like this.
+
+    s1 -- n11 -- n12 -- d1
+          |      |
+    s2 -- n21 -- n22 -- d2
+
+    For n = 3,
+
+       s1-n11----n13----n13-d1   
+          | \    | \    | \   
+       s3-|--n31-|--n32-|--n33-d3
+          | /    | /    | /   
+       s2-n23----n23----n23-d2   
+
+    '''
+
+    # Dictionary structure referenced from: https://sequence-rtd-tutorial.readthedocs.io/en/latest/tutorial/chapter5/network_manager.html#step-1-create-the-network-configuration-file
+    seed = 0
+    graph = {
+        "is_parallel": False,
+        "stop_time": 2000000000000,
+        "nodes": [],
+        "qconnections": [],
+        "cconnections": []
+    }
+    # Generating all nodes.
+    for i in range(1, n+1):
+        src_dict = {
+            "name": ("s"+str(i)),
+            "type": "QuantumRouter",
+            "seed": seed,
+            "memo_size": 50
+        }
+        
+        graph["nodes"].append(src_dict)
+        seed+=1
+        dest_dict = {
+            "name": ("d"+str(i)),
+            "type": "QuantumRouter",
+            "seed": seed,
+            "memo_size": 50
+        }
+        graph["nodes"].append(dest_dict)
+        seed+=1
+        for j in range(1, n+1):
+            node_dict = {
+                "name": ("n"+str(i)+str(j)),
+                "type": "QuantumRouter",
+                "seed": seed,
+                "memo_size": 50
+            }
+            graph["nodes"].append[node_dict]
+            seed+=1
+
+    # Generating all edges.
+    for i in range(1,n+1):
+        q_edge_src = {
+            "node1": "s"+str(i),
+            "node2": "n"+str(i)+"1",
+            "attenuation": 0.0002,
+            "distance": 500,
+            "type": "meet_in_the_middle"
+        }
+        
+        c_edge_src = {
+            "node1": "s"+str(i),
+            "node2": "n"+str(i)+"1",
+            "delay": 500000000
+        }
+        graph["qconnections"].append(q_edge_src)
+        graph["cconnections"].append(c_edge_src)
+        q_edge_dest = {
+            "node1": "d"+str(i),
+            "node2": "n"+str(i)+str(n),
+            "attenuation": 0.0002,
+            "distance": 500,
+            "type": "meet_in_the_middle"
+        }
+        c_edge_dest = {
+            "node1": "d"+str(i),
+            "node2": "n"+str(i)+str(n),
+            "delay": 500000000
+        }
+        graph["qconnections"].append(q_edge_dest)
+        graph["cconnections"].append(c_edge_dest)
+        
+        for j in range(1, n+1):
+            # Intralayer connection
+            q_edge_intra = {
+                "node1": "n"+str(i)+str(j),
+                "node2": "n"+str(1 if i==n else i+1)+str(j),
+                "attenuation": 0.0002,
+                "distance": 500,
+                "type": "meet_in_the_middle"
+            }
+            c_edge_intra = {
+                "node1": "n"+str(i)+str(j),
+                "node2": "n"+str(1 if i==n else i+1)+str(j),
+                "delay": 500000000
+            }
+            graph["qconnections"].append(q_edge_intra)
+            graph["cconnections"].append(c_edge_intra)
+            # Interlayer connection
+            if j != n:
+                q_edge_inter = {
+                    "node1": "n"+str(i)+str(j),
+                    "node2": "n"+str(1)+str(j+1),
+                    "attenuation": 0.0002,
+                    "distance": 500,
+                    "type": "meet_in_the_middle"
+                }
+                c_edge_inter = {
+                    "node1": "n"+str(i)+str(j),
+                    "node2": "n"+str(1)+str(j+1),
+                    "delay": 500000000
+                }
+                graph["qconnections"].append(q_edge_inter)
+                graph["cconnections"].append(c_edge_inter)
+                
+    return graph    
+def random_gen(file_name: str):
+    pass
