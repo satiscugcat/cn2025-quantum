@@ -1,5 +1,5 @@
-import json
-
+import networkx as nx
+import random
 def regular_gen(n: int, file_name: str) -> dict:
     '''
     Returns a network topology following a regular graph structure in the form of a dict.
@@ -41,9 +41,9 @@ def regular_gen(n: int, file_name: str) -> dict:
             "seed": seed,
             "memo_size": 50
         }
-        
         graph["nodes"].append(src_dict)
         seed+=1
+        
         dest_dict = {
             "name": ("d"+str(i)),
             "type": "QuantumRouter",
@@ -52,6 +52,7 @@ def regular_gen(n: int, file_name: str) -> dict:
         }
         graph["nodes"].append(dest_dict)
         seed+=1
+        
         for j in range(1, n+1):
             node_dict = {
                 "name": ("n"+str(i)+str(j)),
@@ -128,5 +129,96 @@ def regular_gen(n: int, file_name: str) -> dict:
                 graph["cconnections"].append(c_edge_inter)
                 
     return graph    
-def random_gen(file_name: str):
-    pass
+def waxman_gen(n: int, alpha, beta, file_name: str) -> dict:
+    G = nx.waxman_graph(n**2, alpha = alpha, beta = beta, seed = 1234)
+    seed = 0
+    graph = {
+        "is_parallel": False,
+        "stop_time": 2000000000000,
+        "nodes": [],
+        "qconnections": [],
+        "cconnections": []
+    }
+
+    for i in range(1, n**2+1):
+        node_dict =  {
+                "name": ("n"+str(i)),
+                "type": "QuantumRouter",
+                "seed": seed,
+                "memo_size": 50
+        }
+        graph["nodes"].append(node_dict)
+        seed +=1
+        
+
+    for k in range(1, n+1):
+        src_dict =  {
+                "name": ("s"+str(k)),
+                "type": "QuantumRouter",
+                "seed": seed,
+                "memo_size": 50
+        }
+        seed+=1
+        dest_dict =  {
+                "name": ("d"+str(k)),
+                "type": "QuantumRouter",
+                "seed": seed,
+                "memo_size": 50
+        }
+        
+        seed +=1
+        graph["nodes"].append(src_dict)
+        graph["nodes"].append(dest_dict)
+        
+    for (u, v) in G.edges.data():
+        pos1 = G.nodes[u]["pos"]
+        pos2 = G.nodes[v]["pos"]
+        q_edge_dict = {
+            "node1": "n"+str(u),
+            "node2": "n"+str(v),
+            "attenuation": 0.0002,
+            "distance": round((pos2-pos1)*10000),
+            "type": "meet_in_the_middle"
+        }
+        c_edge_dict = {
+            "node1": "n"+str(u),
+            "node2": "n"+str(v),
+            "delay": 500000000
+        }
+        graph["qconnections"].append(q_edge_dict)
+        graph["cconnections"].append(c_edge_dict)
+
+    src_nodes = random.sample(range(1, n**2+1), n)
+    dest_nodes = random.sample(range(1, n**2+1), n)
+
+    for i in range(1, n+1):
+        q_edge_dict_src = {
+            "node1": "s"+str(i),
+            "node2": "n"+str(src_nodes[i-1]),
+            "attenuation": 0.0002,
+            "distance": 500,
+            "type": "meet_in_the_middle"
+        }
+        c_edge_dict_src = {
+            "node1": "s"+str(i),
+            "node2": "n"+str(src_nodes[i-1]),
+            "delay": 500000000
+        }
+        graph["qconnections"].append(q_edge_dict_src)
+        graph["cconnections"].append(c_edge_dict_src)
+
+        q_edge_dict_dest = {
+            "node1": "d"+str(i),
+            "node2": "n"+str(dest_nodes[i-1]),
+            "attenuation": 0.0002,
+            "distance": 500,
+            "type": "meet_in_the_middle"
+        }
+        c_edge_dict_dest = {
+            "node1": "d"+str(i),
+            "node2": "n"+str(dest_nodes[i-1]),
+            "delay": 500000000
+        }
+        graph["qconnections"].append(q_edge_dict_dest)
+        graph["cconnections"].append(c_edge_dict_dest)
+    return graph
