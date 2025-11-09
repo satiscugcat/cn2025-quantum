@@ -108,7 +108,7 @@ def gen_tables_shortest_path(topology: RouterNetTopo):
                 if dst_name > src.name:
                     paths = all_shortest_paths(graph, src.name, dst_name)
                 else:
-                    paths = list(map(lambda l: l[::-1], all_shortest_paths(graph, dst_name, src.name)))
+                    paths = list(map(lambda l: l[::-1], all_shortest_paths(graph, dst_name, src.name, weight="weight")))
                     for p in paths:
                         resulting_fidelity = 0.975
                         for node in paths[1:-1]:
@@ -143,7 +143,9 @@ def gen_tables_efficiency_cost(topology: RouterNetTopo):
                 continue
             try:
                 if dst_name > src.name:
-                    paths = all_shortest_paths(graph, src.name, dst_name)
+                    def cost(x, y, edge_dict):
+                        e**(10*(0.999-graph[y]["efficiency"])/(0.999-0.8))
+                    paths = all_shortest_paths(graph, src.name, dst_name, weight=cost)
                 else:
                     paths = list(map(lambda l: l[::-1], all_shortest_paths(graph, dst_name, src.name)))
                     for p in paths:
