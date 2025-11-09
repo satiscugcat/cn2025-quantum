@@ -90,7 +90,7 @@ def gen_tables_shortest_path(topology: RouterNetTopo):
     for node in topology.get_nodes_by_type(RouterNetTopo.QUANTUM_ROUTER):     
         fidelity= node.get_components_by_type("MemoryArray")[0][0].raw_fidelity
         efficiency= node.get_components_by_type("MemoryArray")[0][0].efficiency
-        graph.add_node(node[Topo.NAME], fidelity=fidelity, efficiency=efficiency)
+        graph.add_node(node.name, fidelity=fidelity, efficiency=efficiency)
     costs = {}
     for qc in topology.qchannels:
         router, bsm = qc.sender.name, qc.receiver
@@ -127,7 +127,7 @@ def gen_tables_efficiency_cost(topology: RouterNetTopo):
     for node in topology.get_nodes_by_type(RouterNetTopo.QUANTUM_ROUTER):     
         fidelity= node.get_components_by_type("MemoryArray")[0][0].raw_fidelity
         efficiency= node.get_components_by_type("MemoryArray")[0][0].efficiency
-        graph.add_node(node[Topo.NAME], fidelity=fidelity, efficiency=efficiency)
+        graph.add_node(node.name, fidelity=fidelity, efficiency=efficiency)
     costs = {}
     for qc in topology.qchannels:
         router, bsm = qc.sender.name, qc.receiver
@@ -167,7 +167,7 @@ def gen_tables_kshortest_path(topology: RouterNetTopo, k = 10):
     for node in topology.get_nodes_by_type(RouterNetTopo.QUANTUM_ROUTER):     
         fidelity= node.get_components_by_type("MemoryArray")[0][0].raw_fidelity
         efficiency= node.get_components_by_type("MemoryArray")[0][0].efficiency
-        graph.add_node(node[Topo.NAME], fidelity=fidelity, efficiency=efficiency)
+        graph.add_node(node.name, fidelity=fidelity, efficiency=efficiency)
     costs = {}
     for qc in topology.qchannels:
         router, bsm = qc.sender.name, qc.receiver
@@ -225,7 +225,7 @@ def gen_tables_kxshortest_path(topology: RouterNetTopo, k = 10, x = 1):
     for node in topology.get_nodes_by_type(RouterNetTopo.QUANTUM_ROUTER):     
         fidelity= node.get_components_by_type("MemoryArray")[0][0].raw_fidelity
         efficiency= node.get_components_by_type("MemoryArray")[0][0].efficiency
-        graph.add_node(node[Topo.NAME], fidelity=fidelity, efficiency=efficiency)
+        graph.add_node(node.name, fidelity=fidelity, efficiency=efficiency)
     costs = {}
     for qc in topology.qchannels:
         router, bsm = qc.sender.name, qc.receiver
