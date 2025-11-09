@@ -3,7 +3,7 @@ from sequence.topology.router_net_topo import RouterNetTopo
 from sequence.topology.topology import Topology as Topo
 import random
 import math
-from networkx import Graph, all_shortest_paths, shortest_simple_paths, exception
+from networkx import Graph, all_shortest_paths, shortest_simple_paths, exception, shortest_path_length
 
 def set_parameters_eta(topology: RouterNetTopo, eta: float):
     # set memory parameters
@@ -143,7 +143,7 @@ def gen_tables_efficiency_cost(topology: RouterNetTopo):
                 continue
             try:
                 def cost(x, y, edge_dict):
-                        e**(10*(0.999-graph[y]["efficiency"])/(0.999-0.8))
+                        math.e**(10*(0.999-graph.nodes[y]["efficiency"])/(0.999-0.8))
                 if dst_name > src.name:
                     paths = all_shortest_paths(graph, src.name, dst_name, weight=cost)
                 else:
@@ -260,7 +260,7 @@ def gen_tables_kxshortest_path(topology: RouterNetTopo, k = 10, x = 1):
                     routing_protocol.add_forwarding_rule(dst_name, next_hop)
                 else:
                     paths =  shortest_simple_paths(graph, dst_name, src.name, weight=None)
-                    min_length = shortest_simple_paths(graph, dst_name, src.name, weight=None)
+                    min_length = shortest_path_length(graph, dst_name, src.name, weight=None)
                     final_path = None
                     min_fidelity = 10
                     for (i, p) in enumerate(paths):
