@@ -1,0 +1,118 @@
+{
+    "is_parallel": false,
+    "stop_time": 2000000000000,
+    "nodes": [
+        {
+            "name": "n1",
+            "type": "QuantumRouter",
+            "seed": 0,
+            "memo_size": 50
+        },
+        {
+            "name": "n2",
+            "type": "QuantumRouter",
+            "seed": 1,
+            "memo_size": 50
+        },
+        {
+            "name": "n3",
+            "type": "QuantumRouter",
+            "seed": 2,
+            "memo_size": 50
+        },
+        {
+            "name": "n4",
+            "type": "QuantumRouter",
+            "seed": 3,
+            "memo_size": 50
+        },
+        {
+            "name": "s1",
+            "type": "QuantumRouter",
+            "seed": 4,
+            "memo_size": 50
+        },
+        {
+            "name": "d1",
+            "type": "QuantumRouter",
+            "seed": 5,
+            "memo_size": 50
+        },
+        {
+            "name": "s2",
+            "type": "QuantumRouter",
+            "seed": 6,
+            "memo_size": 50
+        },
+        {
+            "name": "d2",
+            "type": "QuantumRouter",
+            "seed": 7,
+            "memo_size": 50
+        }
+    ],
+    "qconnections": [
+        {
+            "node1": "n1",
+            "node2": "n4",
+            "attenuation": 0.0002,
+            "distance": 4629,
+            "type": "meet_in_the_middle"
+        },
+        {
+            "node1": "s1",
+            "node2": "n2",
+            "attenuation": 0.0002,
+            "distance": 500,
+            "type": "meet_in_the_middle"
+        },
+        {
+            "node1": "d1",
+            "node2": "n1",
+            "attenuation": 0.0002,
+            "distance": 500,
+            "type": "meet_in_the_middle"
+        },
+        {
+            "node1": "s2",
+            "node2": "n3",
+            "attenuation": 0.0002,
+            "distance": 500,
+            "type": "meet_in_the_middle"
+        },
+        {
+            "node1": "d2",
+            "node2": "n4",
+            "attenuation": 0.0002,
+            "distance": 500,
+            "type": "meet_in_the_middle"
+        }
+    ],
+    "cconnections": [
+        {
+            "node1": "n1",
+            "node2": "n4",
+            "delay": 500000000
+        },
+        {
+            "node1": "s1",
+            "node2": "n2",
+            "delay": 500000000
+        },
+        {
+            "node1": "d1",
+            "node2": "n1",
+            "delay": 500000000
+        },
+        {
+            "node1": "s2",
+            "node2": "n3",
+            "delay": 500000000
+        },
+        {
+            "node1": "d2",
+            "node2": "n4",
+            "delay": 500000000
+        }
+    ]
+}

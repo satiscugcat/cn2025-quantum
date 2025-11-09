@@ -1,5 +1,9 @@
 import networkx as nx
 import random
+import math
+import random
+import math
+
 def regular_gen(n: int, file_name: str) -> dict:
     '''
     Returns a network topology following a regular graph structure in the form of a dict.
@@ -129,6 +133,7 @@ def regular_gen(n: int, file_name: str) -> dict:
                 graph["cconnections"].append(c_edge_inter)
                 
     return graph    
+
 def waxman_gen(n: int, alpha, beta, file_name: str) -> dict:
     G = nx.waxman_graph(n**2, alpha = alpha, beta = beta, seed = 1234)
     seed = 0
@@ -170,19 +175,20 @@ def waxman_gen(n: int, alpha, beta, file_name: str) -> dict:
         graph["nodes"].append(src_dict)
         graph["nodes"].append(dest_dict)
         
-    for (u, v) in G.edges.data():
+    for (u, v, attr) in G.edges.data():
         pos1 = G.nodes[u]["pos"]
         pos2 = G.nodes[v]["pos"]
+        dist = math.dist(pos1, pos2)
         q_edge_dict = {
-            "node1": "n"+str(u),
-            "node2": "n"+str(v),
+            "node1": "n"+str(u+1),
+            "node2": "n"+str(v+1),
             "attenuation": 0.0002,
-            "distance": round((pos2-pos1)*10000),
+            "distance": round(dist*10000),
             "type": "meet_in_the_middle"
         }
         c_edge_dict = {
-            "node1": "n"+str(u),
-            "node2": "n"+str(v),
+            "node1": "n"+str(u+1),
+            "node2": "n"+str(v+1),
             "delay": 500000000
         }
         graph["qconnections"].append(q_edge_dict)
