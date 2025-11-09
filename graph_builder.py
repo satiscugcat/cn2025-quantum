@@ -181,8 +181,8 @@ def waxman_gen(n: int, alpha = 0.85, beta=0.275) -> dict:
             "type": "meet_in_the_middle"
         }
         c_edge_dict = {
-            "node1": "n"+str(u),
-            "node2": "n"+str(v),
+            "node1": "n"+str(u+1),
+            "node2": "n"+str(v+1),
             "delay": 500000000
         }
         graph["qconnections"].append(q_edge_dict)
