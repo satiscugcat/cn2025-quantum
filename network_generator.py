@@ -106,7 +106,7 @@ def gen_tables_shortest_path(topology: RouterNetTopo):
                 continue
             try:
                 if dst_name > src.name:
-                    paths = all_shortest_paths(graph, src.name, dst_name)
+                    paths = all_shortest_paths(graph, src.name, dst_name, weight="weight")
                 else:
                     paths = list(map(lambda l: l[::-1], all_shortest_paths(graph, dst_name, src.name, weight="weight")))
                 for p in paths:
@@ -142,12 +142,12 @@ def gen_tables_efficiency_cost(topology: RouterNetTopo):
             if src.name == dst_name:
                 continue
             try:
-                if dst_name > src.name:
-                    def cost(x, y, edge_dict):
+                def cost(x, y, edge_dict):
                         e**(10*(0.999-graph[y]["efficiency"])/(0.999-0.8))
+                if dst_name > src.name:
                     paths = all_shortest_paths(graph, src.name, dst_name, weight=cost)
                 else:
-                    paths = list(map(lambda l: l[::-1], all_shortest_paths(graph, dst_name, src.name)))
+                    paths = list(map(lambda l: l[::-1], all_shortest_paths(graph, dst_name, src.name, weight=cost)))
                 for p in paths:
                     resulting_fidelity = 0.975
                     for node in paths[1:-1]:
@@ -162,7 +162,7 @@ def gen_tables_efficiency_cost(topology: RouterNetTopo):
                 pass
 
 
-def gen_tables_kshortest_path(topology: RouterNetTopo):
+def gen_tables_kshortest_path(topology: RouterNetTopo, k = 10):
     graph = Graph()
     for node in topology.get_nodes_by_type(RouterNetTopo.QUANTUM_ROUTER):     
         fidelity= node.get_components_by_type("MemoryArray")[0][0].raw_fidelity
@@ -183,18 +183,39 @@ def gen_tables_kshortest_path(topology: RouterNetTopo):
                 continue
             try:
                 if dst_name > src.name:
-                    paths = all_shortest_paths(graph, src.name, dst_name)
-                else:
-                    paths = list(map(lambda l: l[::-1], all_shortest_paths(graph, dst_name, src.name, weight="weight")))
-                    for p in paths:
+                    paths = shortest_simple_paths(graph, src.name, dst_name, weight = "weight")
+                    final_path = None
+                    min_fidelity = 10
+                    for (i, p) in enumerate(paths):
+                        if i >= k:
+                            break
                         resulting_fidelity = 0.975
-                    for node in paths[1:-1]:
-                        resulting_fidelity = (resulting_fidelity-0.25)* ((4*graph[node]["efficiency"]**2 - 1)/3) * ((4*graph[node]["fidelity"] - 1)/3) + 0.25
-                    if resulting_fidelity > 0.53:
-                        next_hop = path[1]
-                        # routing protocol locates at the bottom of the stack
-                        routing_protocol = src.network_manager.protocol_stack[0]  # guarantee that [0] is the routing protocol?
-                        routing_protocol.add_forwarding_rule(dst_name, next_hop)
-                        break
+                        for node in paths[1:-1]:
+                            resulting_fidelity = (resulting_fidelity-0.25)* ((4*graph[node]["efficiency"]**2 - 1)/3) * ((4*graph[node]["fidelity"] - 1)/3) + 0.25
+                        if resulting_fidelity < min_fidelity:
+                            min_fidelity = resulting_fidelity
+                            final_path = p    
+                    next_hop = final_path[1]
+                    # routing protocol locates at the bottom of the stack
+                    routing_protocol = src.network_manager.protocol_stack[0]  # guarantee that [0] is the routing protocol?
+                    routing_protocol.add_forwarding_rule(dst_name, next_hop)
+                else:
+                    paths =  shortest_simple_paths(graph, dst_name, src.name, weight="weight")
+                    final_path = None
+                    min_fidelity = 10
+                    for (i, p) in enumerate(paths):
+                        p = p[::-1]
+                        if i >= k:
+                            break
+                        resulting_fidelity = 0.975
+                        for node in paths[1:-1]:
+                            resulting_fidelity = (resulting_fidelity-0.25)* ((4*graph[node]["efficiency"]**2 - 1)/3) * ((4*graph[node]["fidelity"] - 1)/3) + 0.25
+                        if resulting_fidelity < min_fidelity:
+                            min_fidelity = resulting_fidelity
+                            final_path = p    
+                    next_hop = final_path[1]
+                    # routing protocol locates at the bottom of the stack
+                    routing_protocol = src.network_manager.protocol_stack[0]  # guarantee that [0] is the routing protocol?
+                    routing_protocol.add_forwarding_rule(dst_name, next_hop)
             except exception.NetworkXNoPath:
                 pass
