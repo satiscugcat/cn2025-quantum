@@ -17,7 +17,7 @@ def regular_gen(n: int) -> dict:
     For n = 3,
 
        s1-n11----n13----n13-d1   
-          | \    | \    | \   
+          | \\    | \\    | \\   
        s3-|--n31-|--n32-|--n33-d3
           | /    | /    | /   
        s2-n23----n23----n23-d2   
@@ -60,7 +60,7 @@ def regular_gen(n: int) -> dict:
                 "seed": seed,
                 "memo_size": 50
             }
-            graph["nodes"].append[node_dict]
+            graph["nodes"].append(node_dict)
             seed+=1
 
     # Generating all edges.
