@@ -3,7 +3,7 @@ from sequence.topology.router_net_topo import RouterNetTopo
 from sequence.topology.topology import Topology as Topo
 import random
 import math
-from networkx import Graph, all_shortest_paths, shortest_simple_paths
+from networkx import Graph, all_shortest_paths, shortest_simple_paths, exception
 
 def set_parameters_eta(topology: RouterNetTopo, eta: float):
     # set memory parameters
@@ -109,7 +109,7 @@ def gen_tables_shortest_path(topology: RouterNetTopo):
                     paths = all_shortest_paths(graph, src.name, dst_name, weight=None)
                 else:
                     paths = list(map(lambda l: l[::-1], all_shortest_paths(graph, dst_name, src.name, weight=None)))
-                for p in paths:
+                for path in paths:
                     resulting_fidelity = 0.975
                     for node in paths[1:-1]:
                         resulting_fidelity = (resulting_fidelity-0.25)* ((4*graph[node]["efficiency"]**2 - 1)/3) * ((4*graph[node]["fidelity"] - 1)/3) + 0.25
@@ -148,7 +148,7 @@ def gen_tables_efficiency_cost(topology: RouterNetTopo):
                     paths = all_shortest_paths(graph, src.name, dst_name, weight=cost)
                 else:
                     paths = list(map(lambda l: l[::-1], all_shortest_paths(graph, dst_name, src.name, weight=cost)))
-                for p in paths:
+                for path in paths:
                     resulting_fidelity = 0.975
                     for node in paths[1:-1]:
                         resulting_fidelity = (resulting_fidelity-0.25)* ((4*graph[node]["efficiency"]**2 - 1)/3) * ((4*graph[node]["fidelity"] - 1)/3) + 0.25
