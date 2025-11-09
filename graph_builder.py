@@ -174,8 +174,8 @@ def waxman_gen(n: int, alpha, beta, file_name: str) -> dict:
         pos1 = G.nodes[u]["pos"]
         pos2 = G.nodes[v]["pos"]
         q_edge_dict = {
-            "node1": "n"+str(u),
-            "node2": "n"+str(v),
+            "node1": "n"+str(u+1),
+            "node2": "n"+str(v+1),
             "attenuation": 0.0002,
             "distance": round((pos2-pos1)*10000),
             "type": "meet_in_the_middle"
