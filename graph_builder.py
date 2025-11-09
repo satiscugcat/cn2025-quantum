@@ -1,6 +1,6 @@
 import networkx as nx
 import random
-def regular_gen(n: int, file_name: str) -> dict:
+def regular_gen(n: int) -> dict:
     '''
     Returns a network topology following a regular graph structure in the form of a dict.
     
@@ -129,7 +129,7 @@ def regular_gen(n: int, file_name: str) -> dict:
                 graph["cconnections"].append(c_edge_inter)
                 
     return graph    
-def waxman_gen(n: int, alpha, beta, file_name: str) -> dict:
+def waxman_gen(n: int, alpha = 0.85, beta=0.275) -> dict:
     G = nx.waxman_graph(n**2, alpha = alpha, beta = beta, seed = 1234)
     seed = 0
     graph = {
