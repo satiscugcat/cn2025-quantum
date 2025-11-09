@@ -177,7 +177,7 @@ def waxman_gen(n: int, alpha = 0.85, beta=0.275) -> dict:
             "node1": "n"+str(u+1),
             "node2": "n"+str(v+1),
             "attenuation": 0.0002,
-            "distance": round(((pos2[1]-pos1[1])**2 +  (pos2[0]-pos1[0])**2)**0.5 )*1000 ,
+            "distance": round(1000*((pos2[1]-pos1[1])**2 +  (pos2[0]-pos1[0])**2)**0.5 ) ,
             "type": "meet_in_the_middle"
         }
         c_edge_dict = {
