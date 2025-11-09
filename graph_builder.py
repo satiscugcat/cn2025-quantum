@@ -170,14 +170,14 @@ def waxman_gen(n: int, alpha = 0.85, beta=0.275) -> dict:
         graph["nodes"].append(src_dict)
         graph["nodes"].append(dest_dict)
         
-    for (u, v) in G.edges.data():
+    for (u, v, _) in G.edges.data():
         pos1 = G.nodes[u]["pos"]
         pos2 = G.nodes[v]["pos"]
         q_edge_dict = {
             "node1": "n"+str(u+1),
             "node2": "n"+str(v+1),
             "attenuation": 0.0002,
-            "distance": round((pos2-pos1)*10000),
+            "distance": round(((pos2[1]-pos1[1])**2 +  (pos2[0]-pos1[0])**2)**0.5 )*1000 ,
             "type": "meet_in_the_middle"
         }
         c_edge_dict = {
