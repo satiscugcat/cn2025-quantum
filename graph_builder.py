@@ -130,7 +130,7 @@ def regular_gen(n: int) -> dict:
                 
     return graph    
 def waxman_gen(n: int, alpha = 0.85, beta=0.275) -> dict:
-    G = nx.waxman_graph(n**2, alpha = alpha, beta = beta, seed = 1234)
+    G = nx.waxman_graph(n**2, alpha = alpha, beta = beta)
     seed = 0
     graph = {
         "is_parallel": False,
