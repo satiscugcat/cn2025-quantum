@@ -192,9 +192,11 @@ def gen_tables_kshortest_path(topology: RouterNetTopo, k = 10):
                         resulting_fidelity = 0.975
                         for node in p[1:-1]:
                             resulting_fidelity = (resulting_fidelity-0.25)* ((4*graph.nodes[node]["efficiency"]**2 - 1)/3) * ((4*graph.nodes[node]["fidelity"] - 1)/3) + 0.25
-                        if resulting_fidelity < min_fidelity:
+                        if resulting_fidelity < min_fidelity  and resulting_fidelity > 0.53:
                             min_fidelity = resulting_fidelity
-                            final_path = p    
+                            final_path = p
+                    if final_path == None:
+                        raise exception.NetworkXNoPath
                     next_hop = final_path[1]
                     # routing protocol locates at the bottom of the stack
                     routing_protocol = src.network_manager.protocol_stack[0]  # guarantee that [0] is the routing protocol?
@@ -210,9 +212,11 @@ def gen_tables_kshortest_path(topology: RouterNetTopo, k = 10):
                         resulting_fidelity = 0.975
                         for node in p[1:-1]:
                             resulting_fidelity = (resulting_fidelity-0.25)* ((4*graph.nodes[node]["efficiency"]**2 - 1)/3) * ((4*graph.nodes[node]["fidelity"] - 1)/3) + 0.25
-                        if resulting_fidelity < min_fidelity:
+                        if resulting_fidelity < min_fidelity and resulting_fidelity > 0.53:
                             min_fidelity = resulting_fidelity
-                            final_path = p    
+                            final_path = p
+                    if final_path == None:
+                        raise exception.NetworkXNoPath
                     next_hop = final_path[1]
                     # routing protocol locates at the bottom of the stack
                     routing_protocol = src.network_manager.protocol_stack[0]  # guarantee that [0] is the routing protocol?
@@ -251,9 +255,11 @@ def gen_tables_kxshortest_path(topology: RouterNetTopo, k = 10, x = 1):
                         resulting_fidelity = 0.975
                         for node in p[1:-1]:
                             resulting_fidelity = (resulting_fidelity-0.25)* ((4*graph.nodes[node]["efficiency"]**2 - 1)/3) * ((4*graph.nodes[node]["fidelity"] - 1)/3) + 0.25
-                        if resulting_fidelity < min_fidelity:
+                        if resulting_fidelity < min_fidelity and resulting_fidelity > 0.53:
                             min_fidelity = resulting_fidelity
-                            final_path = p    
+                            final_path = p
+                    if final_path==None:
+                        raise exception.NetworkXNoPath
                     next_hop = final_path[1]
                     # routing protocol locates at the bottom of the stack
                     routing_protocol = src.network_manager.protocol_stack[0]  # guarantee that [0] is the routing protocol?
@@ -270,9 +276,11 @@ def gen_tables_kxshortest_path(topology: RouterNetTopo, k = 10, x = 1):
                         resulting_fidelity = 0.975
                         for node in p[1:-1]:
                             resulting_fidelity = (resulting_fidelity-0.25)* ((4*graph.nodes[node]["efficiency"]**2 - 1)/3) * ((4*graph.nodes[node]["fidelity"] - 1)/3) + 0.25
-                        if resulting_fidelity < min_fidelity:
+                        if resulting_fidelity < min_fidelity and resulting_fidelity > 0.53:
                             min_fidelity = resulting_fidelity
-                            final_path = p    
+                            final_path = p
+                    if final_path==None:
+                        raise exception.NetworkXNoPath
                     next_hop = final_path[1]
                     # routing protocol locates at the bottom of the stack
                     routing_protocol = src.network_manager.protocol_stack[0]  # guarantee that [0] is the routing protocol?
