@@ -143,7 +143,7 @@ def gen_tables_efficiency_cost(topology: RouterNetTopo):
                 continue
             try:
                 def cost(x, y, edge_dict):
-                        math.e**(10*(0.999-graph.nodes[y]["efficiency"])/(0.999-0.8))
+                        math.e**(10*(graph.nodes[y]["efficiency"] - 0.8)/(0.999-0.8))
                 if dst_name > src.name:
                     paths = all_shortest_paths(graph, src.name, dst_name, weight=cost)
                 else:
