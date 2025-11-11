@@ -163,7 +163,7 @@ def waxman_gen(n: int, alpha = 0.85, beta=0.275, frac=0.3) -> dict:
         }
         seed+=1
         dest_dict =  {
-                "name": (("h" if k in high_quality else d)+str(k)),
+                "name": (("h" if k in high_quality else "d")+str(k)),
                 "type": "QuantumRouter",
                 "seed": seed,
                 "memo_size": 50
@@ -211,14 +211,14 @@ def waxman_gen(n: int, alpha = 0.85, beta=0.275, frac=0.3) -> dict:
         graph["cconnections"].append(c_edge_dict_src)
 
         q_edge_dict_dest = {
-            "node1": ("h" if i in high_quality else d)+str(i),
+            "node1": ("h" if i in high_quality else "d")+str(i),
             "node2": "n"+str(dest_nodes[i-1]),
             "attenuation": 0.0002,
             "distance": 500,
             "type": "meet_in_the_middle"
         }
         c_edge_dict_dest = {
-            "node1": ("h" if i in high_quality else d)+str(i),
+            "node1": ("h" if i in high_quality else "d")+str(i),
             "node2": "n"+str(dest_nodes[i-1]),
             "delay": 500000000
         }
