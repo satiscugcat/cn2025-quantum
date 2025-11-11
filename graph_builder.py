@@ -1,6 +1,6 @@
 import networkx as nx
 import random
-def regular_gen(n: int) -> dict:
+def regular_gen(n: int, frac=0.3) -> dict:
     '''
     Returns a network topology following a regular graph structure in the form of a dict.
     
@@ -33,6 +33,9 @@ def regular_gen(n: int) -> dict:
         "qconnections": [],
         "cconnections": []
     }
+
+    high_quality=random.sample(range(1, n+1), round(n*frac))
+    
     # Generating all nodes.
     for i in range(1, n+1):
         src_dict = {
@@ -45,7 +48,7 @@ def regular_gen(n: int) -> dict:
         seed+=1
         
         dest_dict = {
-            "name": ("d"+str(i)),
+            "name": (("h" if i in high_quality else "d") +str(i)),
             "type": "QuantumRouter",
             "seed": seed,
             "memo_size": 50
@@ -81,14 +84,14 @@ def regular_gen(n: int) -> dict:
         graph["qconnections"].append(q_edge_src)
         graph["cconnections"].append(c_edge_src)
         q_edge_dest = {
-            "node1": "d"+str(i),
+            "node1": ("h" if i in high_quality else "d")+str(i),
             "node2": "n"+str(i)+str(n),
             "attenuation": 0.0002,
             "distance": 500,
             "type": "meet_in_the_middle"
         }
         c_edge_dest = {
-            "node1": "d"+str(i),
+            "node1": ("h" if i in high_quality else "d")+str(i),
             "node2": "n"+str(i)+str(n),
             "delay": 500000000
         }
@@ -129,7 +132,7 @@ def regular_gen(n: int) -> dict:
                 graph["cconnections"].append(c_edge_inter)
                 
     return graph    
-def waxman_gen(n: int, alpha = 0.85, beta=0.275) -> dict:
+def waxman_gen(n: int, alpha = 0.85, beta=0.275, frac=0.3) -> dict:
     G = nx.waxman_graph(n**2, alpha = alpha, beta = beta)
     seed = 0
     graph = {
@@ -139,7 +142,7 @@ def waxman_gen(n: int, alpha = 0.85, beta=0.275) -> dict:
         "qconnections": [],
         "cconnections": []
     }
-
+    high_quality=random.sample(range(1, n+1), round(n*frac))
     for i in range(1, n**2+1):
         node_dict =  {
                 "name": ("n"+str(i)),
@@ -160,7 +163,7 @@ def waxman_gen(n: int, alpha = 0.85, beta=0.275) -> dict:
         }
         seed+=1
         dest_dict =  {
-                "name": ("d"+str(k)),
+                "name": (("h" if k in high_quality else d)+str(k)),
                 "type": "QuantumRouter",
                 "seed": seed,
                 "memo_size": 50
@@ -208,14 +211,14 @@ def waxman_gen(n: int, alpha = 0.85, beta=0.275) -> dict:
         graph["cconnections"].append(c_edge_dict_src)
 
         q_edge_dict_dest = {
-            "node1": "d"+str(i),
+            "node1": ("h" if i in high_quality else d)+str(i),
             "node2": "n"+str(dest_nodes[i-1]),
             "attenuation": 0.0002,
             "distance": 500,
             "type": "meet_in_the_middle"
         }
         c_edge_dict_dest = {
-            "node1": "d"+str(i),
+            "node1": ("h" if i in high_quality else d)+str(i),
             "node2": "n"+str(dest_nodes[i-1]),
             "delay": 500000000
         }
