@@ -225,3 +225,9 @@ def waxman_gen(n: int, alpha = 0.85, beta=0.275, frac=0.3) -> dict:
         graph["qconnections"].append(q_edge_dict_dest)
         graph["cconnections"].append(c_edge_dict_dest)
     return graph
+
+def is_high(string: str) -> bool:
+    if len(string) > 0:
+        string[0]=='h'
+    else:
+        False
