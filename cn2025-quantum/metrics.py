@@ -1,7 +1,7 @@
 from sequence.topology.router_net_topo import RouterNetTopo
 from graph_builder import is_high
 import random
-
+from network_generator import *
 
 def get_node_path(topology: RouterNetTopo, source, destination):
     src_node = None
@@ -34,14 +34,17 @@ def get_node_path(topology: RouterNetTopo, source, destination):
 def calculate_fidelity(topology: RouterNetTopo, source, destination):
     path = get_node_path(topology, source, destination)
     if path is None:
-        return None
+        return 0
     resulting_fidelity=0.975
     for node in path[1:-1]:
         fidelity= node.get_components_by_type("MemoryArray")[0][0].raw_fidelity
         efficiency= node.get_components_by_type("MemoryArray")[0][0].efficiency
         resulting_fidelity = (resulting_fidelity-0.25)*((4*efficiency**2-1)/3)*((4*fidelity-1)/3) + 0.25
     return resulting_fidelity
-
+def print_forwarding_tables(topology: RouterNetTopo):
+    for node in topology.nodes[topology.QUANTUM_ROUTER]:
+        print(node.name, node.network_manager.protocol_stack[0].forwarding_table)
+        
 def get_source_nodes(topology: RouterNetTopo):
     nodes=[]
     for node in topology.nodes[topology.QUANTUM_ROUTER]:
@@ -73,33 +76,158 @@ def find_stddev(num_list):
     for i in num_list:
         sum+= (i-mean)**2
     return (sum/n)**0.5
-def compare_fidelities(topology: RouterNetTopo):
+
+def evaluate_shortest_path(topology: RouterNetTopo):
+    print("Evaluating shortest path approach.")
+    clear_forwarding_tables(topology)
+    gen_tables_shortest_path(topology)
     source_nodes = get_source_nodes(topology)
     dest_nodes = get_dest_nodes(topology)
     hp_nodes = list(filter(lambda x: is_high(x.name), dest_nodes))
     lp_nodes = list(filter(lambda x: not is_high(x.name), dest_nodes))
-    print(f"High nodes:{list(map(lambda n: n.name, hp_nodes))}")
-    print(f"Low nodes:{list(map(lambda n: n.name, hp_nodes))}")
     hp_fidelities = []
     lp_fidelities = []
     for source in source_nodes:
         for destination in hp_nodes:
             fidelity = calculate_fidelity(topology, source.name, destination.name)
-
-            if fidelity is None:
-                hp_fidelities.append(0)
-            else:
-                hp_fidelities.append(fidelity)
+            hp_fidelities.append(fidelity)
         for destination in lp_nodes:
             fidelity = calculate_fidelity(topology, source.name, destination.name)
-
-            if fidelity is None:
-                lp_fidelities.append(0)
-            else:
-                lp_fidelities.append(fidelity)
+            lp_fidelities.append(fidelity)
 
     print(f"Average high priority fidelity is: {find_mean(hp_fidelities)}")
     print(f"High priority fidelity standard deviation is: {find_stddev(hp_fidelities)}")
 
     print(f"Average low priority fidelity is: {find_mean(lp_fidelities)}")
     print(f"Low priority fidelity standard deviation is: {find_stddev(lp_fidelities)}")
+    print()
+
+
+def evaluate_efficiency_cost(topology: RouterNetTopo):
+    print("Evaluating efficiency cost approach.")
+    clear_forwarding_tables(topology)
+    gen_tables_efficiency_cost(topology)
+    source_nodes = get_source_nodes(topology)
+    dest_nodes = get_dest_nodes(topology)
+    hp_nodes = list(filter(lambda x: is_high(x.name), dest_nodes))
+    lp_nodes = list(filter(lambda x: not is_high(x.name), dest_nodes))
+    hp_fidelities = []
+    lp_fidelities = []
+    for source in source_nodes:
+        for destination in hp_nodes:
+            fidelity = calculate_fidelity(topology, source.name, destination.name)
+            hp_fidelities.append(fidelity)
+        for destination in lp_nodes:
+            fidelity = calculate_fidelity(topology, source.name, destination.name)
+            lp_fidelities.append(fidelity)
+
+    print(f"Average high priority fidelity is: {find_mean(hp_fidelities)}")
+    print(f"High priority fidelity standard deviation is: {find_stddev(hp_fidelities)}")
+
+    print(f"Average low priority fidelity is: {find_mean(lp_fidelities)}")
+    print(f"Low priority fidelity standard deviation is: {find_stddev(lp_fidelities)}")
+    print()
+
+def evaluate_kshortest_path(topology: RouterNetTopo):
+    print("Evaluating k-shortest-path approach.")
+    clear_forwarding_tables(topology)
+    source_nodes = get_source_nodes(topology)
+    dest_nodes = get_dest_nodes(topology)
+    hp_nodes = list(filter(lambda x: is_high(x.name), dest_nodes))
+    lp_nodes = list(filter(lambda x: not is_high(x.name), dest_nodes))
+    hp_fidelities = []
+    lp_fidelities = []
+    for source in source_nodes:
+        for destination in hp_nodes:
+            gen_tables_kshortest_path(topology, source.name, destination.name)
+            fidelity = calculate_fidelity(topology, source.name, destination.name)
+            hp_fidelities.append(fidelity)
+        for destination in lp_nodes:
+            gen_tables_kshortest_path(topology, source.name, destination.name)
+            fidelity = calculate_fidelity(topology, source.name, destination.name)
+            lp_fidelities.append(fidelity)
+
+    print(f"Average high priority fidelity is: {find_mean(hp_fidelities)}")
+    print(f"High priority fidelity standard deviation is: {find_stddev(hp_fidelities)}")
+
+    print(f"Average low priority fidelity is: {find_mean(lp_fidelities)}")
+    print(f"Low priority fidelity standard deviation is: {find_stddev(lp_fidelities)}")
+    print()
+
+def evaluate_kxshortest_path(topology: RouterNetTopo):
+    print("Evaluating kx-shortest-path-approach.")
+    clear_forwarding_tables(topology)
+    source_nodes = get_source_nodes(topology)
+    dest_nodes = get_dest_nodes(topology)
+    hp_nodes = list(filter(lambda x: is_high(x.name), dest_nodes))
+    lp_nodes = list(filter(lambda x: not is_high(x.name), dest_nodes))
+    hp_fidelities = []
+    lp_fidelities = []
+    for source in source_nodes:
+        for destination in hp_nodes:
+            gen_tables_kxshortest_path(topology, source.name, destination.name)
+            fidelity = calculate_fidelity(topology, source.name, destination.name)
+            hp_fidelities.append(fidelity)
+        for destination in lp_nodes:
+            gen_tables_kxshortest_path(topology, source.name, destination.name)
+            fidelity = calculate_fidelity(topology, source.name, destination.name)
+            lp_fidelities.append(fidelity)
+
+    print(f"Average high priority fidelity is: {find_mean(hp_fidelities)}")
+    print(f"High priority fidelity standard deviation is: {find_stddev(hp_fidelities)}")
+
+    print(f"Average low priority fidelity is: {find_mean(lp_fidelities)}")
+    print(f"Low priority fidelity standard deviation is: {find_stddev(lp_fidelities)}")
+    print()
+
+def evaluate_kshortest_path_qos(topology: RouterNetTopo):
+    print("Evaluating QoS based k-shortest path approach.")
+    clear_forwarding_tables(topology)
+    source_nodes = get_source_nodes(topology)
+    dest_nodes = get_dest_nodes(topology)
+    hp_nodes = list(filter(lambda x: is_high(x.name), dest_nodes))
+    lp_nodes = list(filter(lambda x: not is_high(x.name), dest_nodes))
+    hp_fidelities = []
+    lp_fidelities = []
+    for source in source_nodes:
+        for destination in hp_nodes:
+            gen_tables_kshortest_path_qos(topology, source.name, destination.name)
+            fidelity = calculate_fidelity(topology, source.name, destination.name)
+            hp_fidelities.append(fidelity)
+        for destination in lp_nodes:
+            gen_tables_kshortest_path_qos(topology, source.name, destination.name)
+            fidelity = calculate_fidelity(topology, source.name, destination.name)
+            lp_fidelities.append(fidelity)
+
+    print(f"Average high priority fidelity is: {find_mean(hp_fidelities)}")
+    print(f"High priority fidelity standard deviation is: {find_stddev(hp_fidelities)}")
+
+    print(f"Average low priority fidelity is: {find_mean(lp_fidelities)}")
+    print(f"Low priority fidelity standard deviation is: {find_stddev(lp_fidelities)}")
+    print()
+
+def evaluate_kxshortest_path_qos(topology: RouterNetTopo):
+    print("Evaluating QoS based kx-shortest path approach.")
+    clear_forwarding_tables(topology)
+    source_nodes = get_source_nodes(topology)
+    dest_nodes = get_dest_nodes(topology)
+    hp_nodes = list(filter(lambda x: is_high(x.name), dest_nodes))
+    lp_nodes = list(filter(lambda x: not is_high(x.name), dest_nodes))
+    hp_fidelities = []
+    lp_fidelities = []
+    for source in source_nodes:
+        for destination in hp_nodes:
+            gen_tables_kxshortest_path_qos(topology, source.name, destination.name)
+            fidelity = calculate_fidelity(topology, source.name, destination.name)
+            hp_fidelities.append(fidelity)
+        for destination in lp_nodes:
+            gen_tables_kxshortest_path_qos(topology, source.name, destination.name)
+            fidelity = calculate_fidelity(topology, source.name, destination.name)
+            lp_fidelities.append(fidelity)
+
+    print(f"Average high priority fidelity is: {find_mean(hp_fidelities)}")
+    print(f"High priority fidelity standard deviation is: {find_stddev(hp_fidelities)}")
+
+    print(f"Average low priority fidelity is: {find_mean(lp_fidelities)}")
+    print(f"Low priority fidelity standard deviation is: {find_stddev(lp_fidelities)}")
+    print()
