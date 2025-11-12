@@ -1,10 +1,13 @@
 [project]
 name = "cn2025-quantum"
-version = "0.1"
-authors = [
-  { name="Example Author", email="author@example.com" },
+version = "0.3.01"
+dependencies=[
+"sequence"
 ]
-description = "A small example package"
+authors = [
+  { name="satislugcat", email="aniket.mishra@iitgn.ac.in" },
+]
+description = "A package with implementations and tests for Quantum Routing algorithms."
 readme = "README.md"
 requires-python = ">=3.9"
 classifiers = [
@@ -14,6 +17,8 @@ classifiers = [
 license = "MIT"
 license-files = ["LICEN[CS]E*"]
 
+[tool.setuptools]
+packages = ['cn2025-quantum']
 [project.urls]
 Homepage = "https://github.com/satiscugcat/cn2025-quantum"
 Issues = "https://github.com/satiscugcat/cn2025-quantum/issues"
