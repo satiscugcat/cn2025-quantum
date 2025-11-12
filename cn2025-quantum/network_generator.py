@@ -128,6 +128,7 @@ def gen_tables_efficiency_cost(topology: RouterNetTopo, e_max=0.999, e_min=0.8):
             try:
                 def cost(x, y, edge_dict):
                         math.e**(10*(graph.nodes[y]["efficiency"] - e_min)/(e_max-e_min))
+                paths=None
                 if dst_name > src.name:
                     paths = all_shortest_paths(graph, src.name, dst_name, weight=cost)
                 else:
@@ -218,7 +219,7 @@ def gen_tables_kxshortest_path(topology: RouterNetTopo, source, destination, k =
         final_path = None
         min_fidelity = 10
         for (i, p) in enumerate(paths):
-            if i>=k or abs(len(p) - (min_length+1)) < x:
+            if i>=k or abs(len(p) - (min_length+1)) > x:
                 break
             resulting_fidelity = 0.975
             for node in p[1:-1]:
@@ -321,7 +322,7 @@ def gen_tables_kxshortest_path_qos(topology: RouterNetTopo, source, destination,
         if is_high(destination):
             min_fidelity = 10
             for (i, p) in enumerate(paths):
-                if i>=k or abs(len(p) - (min_length+1)) < x:
+                if i>=k or abs(len(p) - (min_length+1)) > x:
                     break
                 resulting_fidelity = 0.975
                 for node in p[1:-1]:
@@ -332,7 +333,7 @@ def gen_tables_kxshortest_path_qos(topology: RouterNetTopo, source, destination,
         else:
             max_fidelity = -1
             for (i, p) in enumerate(paths):
-                if i>=k or abs(len(p) - (min_length+1)) < x:
+                if i>=k or abs(len(p) - (min_length+1)) > x:
                     break
                 resulting_fidelity = 0.975
                 for node in p[1:-1]:
