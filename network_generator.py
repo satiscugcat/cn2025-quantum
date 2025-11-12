@@ -291,7 +291,7 @@ def gen_tables_kxshortest_path(topology: RouterNetTopo, k = 10, x = 1):
 
 
 
-def gen_tables_kshortest_path_qos(topology: RouterNetTopo, k = 10):
+def gen_tables_kshortest_path_qos(topology: RouterNetTopo, k = 10, is_high=is_high):
     graph = Graph()
     for node in topology.get_nodes_by_type(RouterNetTopo.QUANTUM_ROUTER):     
         fidelity= node.get_components_by_type("MemoryArray")[0][0].raw_fidelity
@@ -401,7 +401,7 @@ def gen_tables_kshortest_path_qos(topology: RouterNetTopo, k = 10):
                 pass
 
 
-def gen_tables_kxshortest_path_qos(topology: RouterNetTopo, k = 10, x = 1):
+def gen_tables_kxshortest_path_qos(topology: RouterNetTopo, k = 10, x = 1, is_high=is_high):
     graph = Graph()
     for node in topology.get_nodes_by_type(RouterNetTopo.QUANTUM_ROUTER):     
         fidelity= node.get_components_by_type("MemoryArray")[0][0].raw_fidelity
