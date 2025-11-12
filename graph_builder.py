@@ -48,7 +48,7 @@ def regular_gen(n: int, frac=0.3) -> dict:
         seed+=1
         
         dest_dict = {
-            "name": (("h" if i in high_quality else "d") +str(i)),
+            "name": (("hd" if i in high_quality else "d") +str(i)),
             "type": "QuantumRouter",
             "seed": seed,
             "memo_size": 50
@@ -84,14 +84,14 @@ def regular_gen(n: int, frac=0.3) -> dict:
         graph["qconnections"].append(q_edge_src)
         graph["cconnections"].append(c_edge_src)
         q_edge_dest = {
-            "node1": ("h" if i in high_quality else "d")+str(i),
+            "node1": ("hd" if i in high_quality else "d")+str(i),
             "node2": "n"+str(i)+str(n),
             "attenuation": 0.0002,
             "distance": 500,
             "type": "meet_in_the_middle"
         }
         c_edge_dest = {
-            "node1": ("h" if i in high_quality else "d")+str(i),
+            "node1": ("hd" if i in high_quality else "d")+str(i),
             "node2": "n"+str(i)+str(n),
             "delay": 500000000
         }
@@ -163,7 +163,7 @@ def waxman_gen(n: int, alpha = 0.85, beta=0.275, frac=0.3) -> dict:
         }
         seed+=1
         dest_dict =  {
-                "name": (("h" if k in high_quality else "d")+str(k)),
+                "name": (("hd" if k in high_quality else "d")+str(k)),
                 "type": "QuantumRouter",
                 "seed": seed,
                 "memo_size": 50
@@ -211,14 +211,14 @@ def waxman_gen(n: int, alpha = 0.85, beta=0.275, frac=0.3) -> dict:
         graph["cconnections"].append(c_edge_dict_src)
 
         q_edge_dict_dest = {
-            "node1": ("h" if i in high_quality else "d")+str(i),
+            "node1": ("hd" if i in high_quality else "d")+str(i),
             "node2": "n"+str(dest_nodes[i-1]),
             "attenuation": 0.0002,
             "distance": 500,
             "type": "meet_in_the_middle"
         }
         c_edge_dict_dest = {
-            "node1": ("h" if i in high_quality else "d")+str(i),
+            "node1": ("hd" if i in high_quality else "d")+str(i),
             "node2": "n"+str(dest_nodes[i-1]),
             "delay": 500000000
         }
