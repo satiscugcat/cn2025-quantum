@@ -58,7 +58,7 @@ def regular_gen(n: int, frac=0.3) -> dict:
         
         for j in range(1, n+1):
             node_dict = {
-                "name": ("n"+str(i)+str(j)),
+                "name": ("n"+str(i)+"_"+str(j)),
                 "type": "QuantumRouter",
                 "seed": seed,
                 "memo_size": 50
@@ -70,7 +70,7 @@ def regular_gen(n: int, frac=0.3) -> dict:
     for i in range(1,n+1):
         q_edge_src = {
             "node1": "s"+str(i),
-            "node2": "n"+str(i)+"1",
+            "node2": "n"+str(i)+"_1",
             "attenuation": 0.0002,
             "distance": 500,
             "type": "meet_in_the_middle"
@@ -78,21 +78,21 @@ def regular_gen(n: int, frac=0.3) -> dict:
         
         c_edge_src = {
             "node1": "s"+str(i),
-            "node2": "n"+str(i)+"1",
+            "node2": "n"+str(i)+"_1",
             "delay": 500000000
         }
         graph["qconnections"].append(q_edge_src)
         graph["cconnections"].append(c_edge_src)
         q_edge_dest = {
             "node1": ("hd" if i in high_quality else "d")+str(i),
-            "node2": "n"+str(i)+str(n),
+            "node2": "n"+str(i)+"_"+str(n),
             "attenuation": 0.0002,
             "distance": 500,
             "type": "meet_in_the_middle"
         }
         c_edge_dest = {
             "node1": ("hd" if i in high_quality else "d")+str(i),
-            "node2": "n"+str(i)+str(n),
+            "node2": "n"+str(i)+"_"+str(n),
             "delay": 500000000
         }
         graph["qconnections"].append(q_edge_dest)
@@ -100,32 +100,33 @@ def regular_gen(n: int, frac=0.3) -> dict:
         
         for j in range(1, n+1):
             # Intralayer connection
-            q_edge_intra = {
-                "node1": "n"+str(i)+str(j),
-                "node2": "n"+str(1 if i==n else i+1)+str(j),
-                "attenuation": 0.0002,
-                "distance": 500,
-                "type": "meet_in_the_middle"
-            }
-            c_edge_intra = {
-                "node1": "n"+str(i)+str(j),
-                "node2": "n"+str(1 if i==n else i+1)+str(j),
-                "delay": 500000000
-            }
-            graph["qconnections"].append(q_edge_intra)
-            graph["cconnections"].append(c_edge_intra)
+            if n!=2 or i!=2:
+                q_edge_intra = {
+                    "node1": "n"+str(i)+"_"+str(j),
+                    "node2": "n"+str(1 if i==n else i+1)+"_"+str(j),
+                    "attenuation": 0.0002,
+                    "distance": 500,
+                    "type": "meet_in_the_middle"
+                }
+                c_edge_intra = {
+                    "node1": "n"+str(i)+"_"+str(j),
+                    "node2": "n"+str(1 if i==n else i+1)+"_"+str(j),
+                    "delay": 500000000
+                }
+                graph["qconnections"].append(q_edge_intra)
+                graph["cconnections"].append(c_edge_intra)
             # Interlayer connection
             if j != n:
                 q_edge_inter = {
-                    "node1": "n"+str(i)+str(j),
-                    "node2": "n"+str(1)+str(j+1),
+                    "node1": "n"+str(i)+"_"+str(j),
+                    "node2": "n"+str(1)+"_"+str(j+1),
                     "attenuation": 0.0002,
                     "distance": 500,
                     "type": "meet_in_the_middle"
                 }
                 c_edge_inter = {
-                    "node1": "n"+str(i)+str(j),
-                    "node2": "n"+str(1)+str(j+1),
+                    "node1": "n"+str(i)+"_"+str(j),
+                    "node2": "n"+str(1)+"_"+str(j+1),
                     "delay": 500000000
                 }
                 graph["qconnections"].append(q_edge_inter)
