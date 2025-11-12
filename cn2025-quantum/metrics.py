@@ -77,7 +77,7 @@ def find_stddev(num_list):
         sum+= (i-mean)**2
     return (sum/n)**0.5
 
-def evaluate_shortest_path(topology: RouterNetTopo):
+def evaluate_shortest_path(topology: RouterNetTopo, is_high=is_high):
     print("Evaluating shortest path approach.")
     clear_forwarding_tables(topology)
     gen_tables_shortest_path(topology)
@@ -103,7 +103,7 @@ def evaluate_shortest_path(topology: RouterNetTopo):
     print()
 
 
-def evaluate_efficiency_cost(topology: RouterNetTopo):
+def evaluate_efficiency_cost(topology: RouterNetTopo, is_high=is_high):
     print("Evaluating efficiency cost approach.")
     clear_forwarding_tables(topology)
     gen_tables_efficiency_cost(topology)
@@ -128,7 +128,7 @@ def evaluate_efficiency_cost(topology: RouterNetTopo):
     print(f"Low priority fidelity standard deviation is: {find_stddev(lp_fidelities)}")
     print()
 
-def evaluate_kshortest_path(topology: RouterNetTopo):
+def evaluate_kshortest_path(topology: RouterNetTopo, is_high=is_high):
     print("Evaluating k-shortest-path approach.")
     clear_forwarding_tables(topology)
     source_nodes = get_source_nodes(topology)
@@ -154,7 +154,7 @@ def evaluate_kshortest_path(topology: RouterNetTopo):
     print(f"Low priority fidelity standard deviation is: {find_stddev(lp_fidelities)}")
     print()
 
-def evaluate_kxshortest_path(topology: RouterNetTopo):
+def evaluate_kxshortest_path(topology: RouterNetTopo, is_high=is_high):
     print("Evaluating kx-shortest-path-approach.")
     clear_forwarding_tables(topology)
     source_nodes = get_source_nodes(topology)
@@ -180,7 +180,7 @@ def evaluate_kxshortest_path(topology: RouterNetTopo):
     print(f"Low priority fidelity standard deviation is: {find_stddev(lp_fidelities)}")
     print()
 
-def evaluate_kx0shortest_path(topology: RouterNetTopo):
+def evaluate_kx0shortest_path(topology: RouterNetTopo, is_high=is_high):
     print("Evaluating kx0-shortest-path-approach.")
     clear_forwarding_tables(topology)
     source_nodes = get_source_nodes(topology)
@@ -207,7 +207,7 @@ def evaluate_kx0shortest_path(topology: RouterNetTopo):
     print()
 
 
-def evaluate_kshortest_path_qos(topology: RouterNetTopo):
+def evaluate_kshortest_path_qos(topology: RouterNetTopo, is_high=is_high):
     print("Evaluating QoS based k-shortest path approach.")
     clear_forwarding_tables(topology)
     source_nodes = get_source_nodes(topology)
@@ -233,7 +233,7 @@ def evaluate_kshortest_path_qos(topology: RouterNetTopo):
     print(f"Low priority fidelity standard deviation is: {find_stddev(lp_fidelities)}")
     print()
 
-def evaluate_kxshortest_path_qos(topology: RouterNetTopo):
+def evaluate_kxshortest_path_qos(topology: RouterNetTopo, is_high=is_high):
     print("Evaluating QoS based kx-shortest path approach.")
     clear_forwarding_tables(topology)
     source_nodes = get_source_nodes(topology)
@@ -260,7 +260,7 @@ def evaluate_kxshortest_path_qos(topology: RouterNetTopo):
     print()
 
 
-def evaluate_kx0shortest_path_qos(topology: RouterNetTopo):
+def evaluate_kx0shortest_path_qos(topology: RouterNetTopo, is_high=is_high):
     print("Evaluating QoS based kx0-shortest path approach.")
     clear_forwarding_tables(topology)
     source_nodes = get_source_nodes(topology)
