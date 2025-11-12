@@ -228,6 +228,6 @@ def waxman_gen(n: int, alpha = 0.85, beta=0.275, frac=0.3) -> dict:
 
 def is_high(string: str) -> bool:
     if len(string) > 0:
-        string[0]=='h'
+        return string[0]=='h'
     else:
-        False
+        return False
